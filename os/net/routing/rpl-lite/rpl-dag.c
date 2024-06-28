@@ -603,9 +603,25 @@ process_dio_init_dag(rpl_dio_t *dio) {
 /*---------------------------------------------------------------------------*/
 void
 rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio) {
+//#if RPL_NET_ID
+    LOG_INFO("Checking if the DIO comes from the chosen network");
+    uip_ipaddr_t net_id;
+    uiplib_ipaddrconv(RPL_CONF_NET_ID, &net_id);
+    for (int i=0; i<8; i++) {
+        if (dio->dag_id.u16[i] != net_id.u16[i]) {
+            LOG_WARN("Drop DIO, it is not from the network wished. ID wished : ");
+            LOG_WARN_6ADDR(&net_id);
+            LOG_WARN_("; ID recv : ");
+            LOG_WARN_6ADDR(&(dio->dag_id));
+            LOG_WARN_(";\n");
+            return;
+        }
+    }
+//#endif
 #if RPL_CONN_TO_SPECIFIC
     uip_ipaddr_t connect_to;
     uiplib_ipaddrconv(RPL_CONF_CONN_TO, &connect_to);
+    LOG_INFO("Checking if the DIO is from the node wished");
     for (int i=0; i<8; i++) {
         if (from->u16[i] != connect_to.u16[i]) {
             LOG_WARN("Drop DIO, it is not from the node wished. IP wished : ");

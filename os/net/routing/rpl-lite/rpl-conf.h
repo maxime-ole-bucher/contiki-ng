@@ -208,6 +208,16 @@
 #define RPL_CONN_TO_SPECIFIC 0
 #endif
 
+/*
+ * This value decides if we want to connect to a specific
+ * network
+ */
+#ifdef RPL_CONF_NET_ID
+#define RPL_NET_ID 1
+#else
+#define RPL_NET_ID 0
+#endif
+
 /******************************************************************************/
 /********************************** Timing ************************************/
 /******************************************************************************/
