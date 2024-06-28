@@ -202,10 +202,10 @@
  * This value decides if we have to limit the connection to
  * the root and other node
  */
-#ifdef RPL_CONF_LIMIT_CONN_TO_NODE
-#define RPL_LIMIT_CONN_TO_NODE RPL_CONF_LIMIT_CONN_TO_NODE
+#ifdef RPL_CONF_CONN_TO
+#define RPL_CONN_TO_SPECIFIC 1
 #else
-#define RPL_LIMIT_CONN_TO_NODE 0
+#define RPL_CONN_TO_SPECIFIC 0
 #endif
 
 /******************************************************************************/

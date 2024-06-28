@@ -46,6 +46,7 @@
 #include "net/ipv6/uip-sr.h"
 #include "net/nbr-table.h"
 #include "net/link-stats.h"
+#include "net/ipv6/uiplib.h"
 
 /* Log configuration */
 #include "sys/log.h"
@@ -285,7 +286,7 @@ rpl_dag_update_state(void) {
             rpl_timers_dio_reset("Poison routes");
             rpl_timers_schedule_leaving();
         }
-    } else if (!rpl_dag_root_is_root()) {
+    } else if (!rpl_dag_root_is_root()) { // if we are not the root then :
         rpl_nbr_t *old_parent = curr_instance.dag.preferred_parent;
         rpl_nbr_t *nbr;
 
@@ -602,6 +603,20 @@ process_dio_init_dag(rpl_dio_t *dio) {
 /*---------------------------------------------------------------------------*/
 void
 rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio) {
+#if RPL_CONN_TO_SPECIFIC
+    uip_ipaddr_t connect_to;
+    uiplib_ipaddrconv(RPL_CONF_CONN_TO, &connect_to);
+    for (int i=0; i<8; i++) {
+        if (from->u16[i] != connect_to.u16[i]) {
+            LOG_WARN("Drop DIO, it is not from the node wished. IP wished : ");
+            LOG_WARN_6ADDR(&connect_to);
+            LOG_WARN_("; IP recv : ");
+            LOG_WARN_6ADDR(from);
+            LOG_WARN_(";\n");
+            return;
+        }
+    }
+#endif
     if (!curr_instance.used && !rpl_dag_root_is_root()) {
         /* Attempt to init our DAG from this DIO */
         if (!process_dio_init_dag(dio)) {

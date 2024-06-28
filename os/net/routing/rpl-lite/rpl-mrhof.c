@@ -222,12 +222,6 @@ best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2) {
         return nbr1_is_acceptable ? nbr1 : NULL;
     }
 
-#if RPL_LIMIT_CONN_TO_NODE
-    LOG_WARN("RPL_LIMIT_CONN_TO_NODE is set, connection to the least optimal path.\n");
-    printf("nbr1 : %d ; nbr2 : %d ; usable : %d ;\n", nbr1->rank, nbr2->rank, nbr_has_usable_link(nbr2));
-    return nbr_path_cost(nbr1) < nbr_path_cost(nbr2) ? nbr2 : nbr1;
-#endif
-
     /* Maintain stability of the preferred parent. Switch only if the gain
     is greater than RANK_THRESHOLD, or if the neighbor has been better than the
     current parent for at more than TIME_THRESHOLD. */
