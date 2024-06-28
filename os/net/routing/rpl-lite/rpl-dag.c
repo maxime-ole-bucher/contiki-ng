@@ -603,7 +603,7 @@ process_dio_init_dag(rpl_dio_t *dio) {
 /*---------------------------------------------------------------------------*/
 void
 rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio) {
-//#if RPL_NET_ID
+#if RPL_NET_ID
     LOG_INFO("Checking if the DIO comes from the chosen network");
     uip_ipaddr_t net_id;
     uiplib_ipaddrconv(RPL_CONF_NET_ID, &net_id);
@@ -617,7 +617,7 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio) {
             return;
         }
     }
-//#endif
+#endif
 #if RPL_CONN_TO_SPECIFIC
     uip_ipaddr_t connect_to;
     uiplib_ipaddrconv(RPL_CONF_CONN_TO, &connect_to);
